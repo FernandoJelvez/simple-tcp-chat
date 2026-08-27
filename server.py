@@ -6,12 +6,18 @@ def chat_loop(connectionSocket, addr):
             sentence = connectionSocket.recv(1024).decode()
             if sentence=="":
                 break
-            connectionSocket.send(sentence.encode())
+                print("closing ",addr)
+            print(sentence)
+            for t in threads.values():
+                t.send(sentence.encode())
         except ConnectionResetError:
+            print("closing a reset connection...")
             break
     connectionSocket.close()
+    threads.pop(addr[0]+":"+str(addr[1]))
+    print(threads)
 
-threads = []
+threads = {}
 serverPort = 12000
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('', serverPort))
@@ -20,6 +26,6 @@ serverSocket.listen(2)
 while True:
     connectionSocket, addr = serverSocket.accept()
     t = threading.Thread(target=chat_loop, args=(connectionSocket,addr,))
-    threads.append(t)
+    threads[addr[0]+":"+str(addr[1])]=connectionSocket
     t.start()
     
