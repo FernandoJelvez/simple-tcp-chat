@@ -1,6 +1,6 @@
 from socket import *
 import threading
-def chat_loop(connectionSocket, addr):
+def chat_loop(connectionSocket, addr, name):
     while True:
         try:
             sentence = connectionSocket.recv(1024).decode()
@@ -8,8 +8,10 @@ def chat_loop(connectionSocket, addr):
                 break
                 print("closing ",addr)
             print(sentence)
-            for t in threads.values():
-                t.send(sentence.encode())
+            others = threads.copy()
+            others.pop(addr[0]+":"+str(addr[1]))
+            for t in others:
+                others[t].send(sentence.encode())
         except ConnectionResetError:
             print("closing a reset connection...")
             break
@@ -25,7 +27,9 @@ print('El servidor está listo para recibir')
 serverSocket.listen(2)
 while True:
     connectionSocket, addr = serverSocket.accept()
-    t = threading.Thread(target=chat_loop, args=(connectionSocket,addr,))
+    name = connectionSocket.recv(1024).decode()
+    connectionSocket.send(("Welcome "+name+"!").encode())
+    t = threading.Thread(target=chat_loop, args=(connectionSocket,addr,name,))
     threads[addr[0]+":"+str(addr[1])]=connectionSocket
     t.start()
     

@@ -2,10 +2,6 @@ from socket import *
 import msvcrt
 import threading
 import os
-serverName = 'localhost'
-serverPort = 12000
-clientSocket = socket(AF_INET, SOCK_STREAM)
-clientSocket.connect((serverName, serverPort))
 
 sentence=""
 active=True
@@ -26,19 +22,33 @@ def press():
             if sentence == '//exit':
                 active=False
                 break
-            sentence=sentence
             clientSocket.send(sentence.encode())
+            clear()
+            messages.append(("me> "+sentence))
             sentence=""
+            for m in messages:
+                print(m)
+            print("> ", end="", flush=True)
     clientSocket.close()
 
+serverName = input("server name: ")
+serverPort = 12000
+print("connecting to",serverName+":"+str(serverPort))
+clientSocket = socket(AF_INET, SOCK_STREAM)
+clientSocket.connect((serverName, serverPort))
+print("connected")
+name=input("name: ")
+clientSocket.send(name.encode())
+print("wait...")
 t = threading.Thread(target=press, args=())
 t.start()
 messages=[]
+print("startup complete")
 while active:
     receivedSentence = clientSocket.recv(1024)
-    messages.append(receivedSentence)
+    messages.append(receivedSentence.decode())
     clear()
     for m in messages:
-        print('From Server: ', m.decode())
-    print(sentence)
+        print(m)
+    print("> "+sentence, end="", flush=True)
 input()
