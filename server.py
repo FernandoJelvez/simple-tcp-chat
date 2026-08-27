@@ -11,7 +11,7 @@ def chat_loop(connectionSocket, addr, name):
             others = threads.copy()
             others.pop(addr[0]+":"+str(addr[1]))
             for t in others:
-                others[t].send(sentence.encode())
+                others[t].send((name+"< "+sentence).encode())
         except ConnectionResetError:
             print("closing a reset connection...")
             break

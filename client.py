@@ -16,8 +16,9 @@ def press():
             print(key ,end="", flush=True)
             sentence=sentence+key
         elif key=="\x08":
-            print("\b \b" ,end="", flush=True)
-            sentence = sentence[:-1]
+            if not sentence =="":
+                print("\b \b" ,end="", flush=True)
+                sentence = sentence[:-1]
         elif key=="\r":
             if sentence == '//exit':
                 active=False
@@ -31,11 +32,17 @@ def press():
             print("> ", end="", flush=True)
     clientSocket.close()
 
-serverName = input("server name: ")
-serverPort = 12000
-print("connecting to",serverName+":"+str(serverPort))
-clientSocket = socket(AF_INET, SOCK_STREAM)
-clientSocket.connect((serverName, serverPort))
+while True:
+    serverName = input("server name: ")
+    serverPort = 12000
+    print("connecting to",serverName+":"+str(serverPort))
+    try:
+        clientSocket = socket(AF_INET, SOCK_STREAM)
+        clientSocket.connect((serverName, serverPort))
+    except gaierror:
+        print("could no connect to",serverName,"- please check your connection or typing mistakes")
+    else:
+        break
 print("connected")
 name=input("name: ")
 clientSocket.send(name.encode())
