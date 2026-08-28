@@ -34,7 +34,7 @@ def press():
 
 while True:
     serverName = input("server name: ")
-    serverPort = 12000
+    serverPort = int(input("port: "))
     print("connecting to",serverName+":"+str(serverPort))
     try:
         clientSocket = socket(AF_INET, SOCK_STREAM)
