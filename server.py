@@ -33,4 +33,3 @@ while True:
     t = threading.Thread(target=chat_loop, args=(connectionSocket,addr,name,))
     threads[addr[0]+":"+str(addr[1])]=connectionSocket
     t.start()
-    

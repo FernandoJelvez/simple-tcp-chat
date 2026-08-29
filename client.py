@@ -56,11 +56,14 @@ t = threading.Thread(target=press, args=())
 t.start()
 messages=[]
 print("startup complete")
-while active: 
-    receivedSentence = clientSocket.recv(1024)
-    messages.append(receivedSentence.decode())
-    clear()
-    for m in messages:
-        print(m)
-    print("> "+sentence, end="", flush=True)
-input()
+while active:
+    try:
+        receivedSentence = clientSocket.recv(1024)
+        messages.append(receivedSentence.decode())
+        clear()
+        for m in messages:
+            print(m)
+        print("> "+sentence, end="", flush=True)
+    except ConnectionAbortedError:
+        if active:
+            print("connection aborted")
