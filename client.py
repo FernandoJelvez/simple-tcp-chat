@@ -39,8 +39,13 @@ while True:
     try:
         clientSocket = socket(AF_INET, SOCK_STREAM)
         clientSocket.connect((serverName, serverPort))
+        clientSocket.recv(1024)
+    except ConnectionRefusedError:
+        print("connection refused by server, try again")
     except gaierror:
         print("could no connect to",serverName,"- please check your connection or typing mistakes")
+    except ConnectionAbortedError:
+        print("connection aborted by server, check the address and port for typing mistakes")
     else:
         break
 print("connected")
@@ -51,7 +56,7 @@ t = threading.Thread(target=press, args=())
 t.start()
 messages=[]
 print("startup complete")
-while active:
+while active: 
     receivedSentence = clientSocket.recv(1024)
     messages.append(receivedSentence.decode())
     clear()

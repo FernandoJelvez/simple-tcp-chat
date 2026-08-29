@@ -27,6 +27,7 @@ print('El servidor está listo para recibir')
 serverSocket.listen(2)
 while True:
     connectionSocket, addr = serverSocket.accept()
+    connectionSocket.send("CONNECTED".encode())
     name = connectionSocket.recv(1024).decode()
     connectionSocket.send(("Welcome "+name+"!").encode())
     t = threading.Thread(target=chat_loop, args=(connectionSocket,addr,name,))
