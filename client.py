@@ -30,7 +30,10 @@ def press():
             for m in messages:
                 print(m)
             print("> ", end="", flush=True)
-    clientSocket.close()
+    clientSocket.shutdown(SHUT_RDWR)
+    print("shut")
+    print("close")
+    print(active)
 
 while True:
     serverName = input("server name: ")
@@ -57,13 +60,17 @@ t.start()
 messages=[]
 print("startup complete")
 while active:
+    print(active)
     try:
         receivedSentence = clientSocket.recv(1024)
-        messages.append(receivedSentence.decode())
-        clear()
-        for m in messages:
-            print(m)
-        print("> "+sentence, end="", flush=True)
+        if active:
+            messages.append(receivedSentence.decode())
+            clear()
+            for m in messages:
+                print(m)
+            print("> "+sentence, end="", flush=True)
+        else:
+            clientSocket.close()
     except ConnectionAbortedError:
         if active:
             print("connection aborted")

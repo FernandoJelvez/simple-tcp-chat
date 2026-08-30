@@ -3,8 +3,11 @@ import threading
 def chat_loop(connectionSocket, addr, name):
     while True:
         try:
-            sentence = connectionSocket.recv(1024).decode()
-            if sentence=="":
+            received = connectionSocket.recv(1024)
+            print(received,"r")
+            sentence = received.decode()
+            print(sentence,"s")
+            if received==b'':
                 break
                 print("closing ",addr)
             print(sentence)
