@@ -1,0 +1,3 @@
+Servidor de chat tcp simple, no requiere descarfar ninguna libreria adicional
+Para hacer funcionar el servidor puede ser necesario usar permisos de administrador
+Es necesario hacer funcionar el servidor antes que el socket
