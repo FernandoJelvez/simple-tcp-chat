@@ -31,9 +31,6 @@ def press():
                 print(m)
             print("> ", end="", flush=True)
     clientSocket.shutdown(SHUT_RDWR)
-    print("shut")
-    print("close")
-    print(active)
 
 while True:
     serverName = input("server name: ")
@@ -60,7 +57,6 @@ t.start()
 messages=[]
 print("startup complete")
 while active:
-    print(active)
     try:
         receivedSentence = clientSocket.recv(1024)
         if active:
